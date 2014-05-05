@@ -125,7 +125,6 @@ window.onload = function () {
 	drawer = new Drawer(canvas);
 
 	setInterval(function () {
-		model.time += 0.5;
 		drawer.repaint();
 	}, 30);
 };
