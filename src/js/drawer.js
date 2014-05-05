@@ -5,21 +5,21 @@ function Drawer (canvas) {
 	this.view = {
 		x: 0, // center position
 		y: 0, // center position
-		range: 3500000000.0, // half of shortest dimension (width/height)
+		range: 4500000000.0, // half of shortest dimension (width/height)
 	};
 
 	this.planetScale = 500;
 
 }
 
-Drawer.prototype.translateDistance = function (distance) {
-	return Math.min(this.canvas.width, this.canvas.height) / (2 * this.view.range) * distance * this.planetScale;
+Drawer.prototype.translateDistance = function (distance, scale) {
+	scale = scale || this.planetScale;
+	return Math.min(this.canvas.width, this.canvas.height) / (2 * this.view.range) * distance * scale;
 };
 
 Drawer.prototype.translatePosition = function (position) {
 	var scaledDimension = Math.min(this.canvas.width, this.canvas.height);
 	return {
-		// todo: this.view.x and y
 		x: ((this.view.range * this.canvas.width/scaledDimension) + position.x - this.view.x)/(this.view.range*2*this.canvas.width/scaledDimension) * this.canvas.width,
 		y: ((this.view.range * this.canvas.height/scaledDimension) + position.y - this.view.y)/(this.view.range*2*this.canvas.height/scaledDimension) * this.canvas.height
 	}
@@ -74,6 +74,13 @@ Drawer.prototype.repaint = function () {
 	{
 		if (planets.hasOwnProperty(name))
 		{
+			// draw path
+			this.context.strokeStyle = "#333333";
+			position = this.translatePosition({x:0, y:0});
+			this.context.beginPath();
+			this.context.arc(position.x, position.y, this.translateDistance(planets[name].starDistance, 1.0), 0, 2 * Math.PI, false);
+			this.context.stroke();
+
 			position = model.getPlanetPosition(planets[name]);
 			position = this.translatePosition(position);
 			this.context.fillStyle = planets[name].color;
