@@ -27,40 +27,41 @@ Drawer.prototype.translatePosition = function (position) {
 
 Drawer.prototype.getRotatedVectorPoint = function (point, center, angle) {
 	// temp
+	var s = Math.sin(angle*Math.PI*2), c = Math.cos(angle*Math.PI*2);
+	var point = {x: point.x * c - point.y * s, y: point.x * s + point.y * c};
 	return {x: center.x + point.x, y: center.y + point.y}
 };
 
 Drawer.prototype.paintShip = function (position, angle, color1, color2) {
-	var p1, p2, p3;
+	var points1 = [
+		{x: 0, y:-10},
+		{x: -5, y:-5},
+		{x: -5, y:5},
+		{x: -10, y:10},
+		{x: 10, y:10},
+		{x: 5, y:5},
+		{x: 5, y:-5},
+		{x: 0, y:-10},
+	], point, i;
+
     // Draw saucer bottom.
     this.context.beginPath();
-    // top
-    p1 = this.getRotatedVectorPoint({x: 0, y: -20}, position, angle)
-    this.context.moveTo(p1.x, p1.y);
-    // top left angle
-    p1 = this.getRotatedVectorPoint({x: -20, y: -15}, position, angle)
-    p2 = this.getRotatedVectorPoint({x: -20, y: 0}, position, angle)
-    p3 = this.getRotatedVectorPoint({x: -10, y: 0}, position, angle)
-    this.context.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-    //bottom left angle
-    p1 = this.getRotatedVectorPoint({x: -20, y: -15}, position, angle)
-    p2 = this.getRotatedVectorPoint({x: -20, y: 0}, position, angle)
-    p3 = this.getRotatedVectorPoint({x: -10, y: 0}, position, angle)
-    this.context.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+    point = this.getRotatedVectorPoint(points1[0], position, angle);
+    this.context.moveTo(point.x, point.y);
+	for (i = 1; i<points1.length; i+=1) {
+    	point = this.getRotatedVectorPoint(points1[i], position, angle)
+		this.context.lineTo(point.x, point.y);
+	}
     this.context.closePath();
-    this.context.fillStyle = "rgb(222, 103, 0)";
+    this.context.fillStyle = color1;
     this.context.fill();
 
-    // Draw saucer top.
+
     this.context.beginPath();
-    this.context.moveTo(22.3, 12.0);
-    this.context.bezierCurveTo(22.3, 13.3, 19.4, 14.3, 15.9, 14.3);
-    this.context.bezierCurveTo(12.4, 14.3, 9.6, 13.3, 9.6, 12.0);
-    this.context.bezierCurveTo(9.6, 10.8, 12.4, 9.7, 15.9, 9.7);
-    this.context.bezierCurveTo(19.4, 9.7, 22.3, 10.8, 22.3, 12.0);
-    this.context.closePath();
-    this.context.fillStyle = "rgb(51, 190, 0)";
-    this.context.fill();
+    point = this.getRotatedVectorPoint({x: 0, y: -3}, position, angle);
+	this.context.arc(point.x, point.y, 2, 0, 2 * Math.PI, false);
+	this.context.fillStyle = color2
+	this.context.fill();
 }
 
 Drawer.prototype.repaint = function () {
@@ -92,7 +93,7 @@ Drawer.prototype.repaint = function () {
 	this.context.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
 	this.context.fill();
 
-	this.paintShip({x: 100, y: 100}, 0, "rgb(222, 103, 0)", "rgb(51, 190, 0)");
+	this.paintShip({x: 100, y: 100}, model.time/100, "#7777FF", "#2222FF");
 };
 
 Drawer.prototype.zoom = function (delta) {
