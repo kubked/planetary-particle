@@ -17,9 +17,9 @@ Robot.prototype.destroy = function(){
     document.removeEventListener("clockTick", this.destroy);
 }
 
-Robot.prototype.move = function(){
+Robot.prototype.move = function(keys){
     // move
-    console.log("move");
+    console.log("move", keys);
 }
 
 Robot.prototype.sense = function(distance_sensors){
@@ -38,6 +38,6 @@ var robot = new Robot(
     randomIntFromInterval(0, 360)
 );
 
-document.addEventListener("clockTick", function(){
-    robot.move();
+document.addEventListener("clockTick", function(ev){
+    robot.move(ev.detail.keys);
 });

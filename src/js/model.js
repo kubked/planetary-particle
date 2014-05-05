@@ -2,7 +2,7 @@ function Model () {
 	this.time = 0.0; // in days
 	var obj = this;
 	document.addEventListener("clockTick", function(ev) {
-	  obj.setTime(ev.detail); // Prints "Example of an event"
+	  obj.setTime(ev.detail.clock); // Prints "Example of an event"
 	});
 }
 
