@@ -25,14 +25,15 @@ Drawer.prototype.translatePosition = function (position) {
 	}
 };
 
-Drawer.prototype.getRotatedVectorPoint = function (point, center, angle) {
+Drawer.prototype.getRotatedVectorPoint = function (point, center, angle, scale) {
 	// temp
 	var s = Math.sin(angle*Math.PI*2), c = Math.cos(angle*Math.PI*2);
 	var point = {x: point.x * c - point.y * s, y: point.x * s + point.y * c};
-	return {x: center.x + point.x, y: center.y + point.y}
+	return {x: center.x + point.x*scale, y: center.y + point.y*scale}
 };
 
-Drawer.prototype.paintShip = function (position, angle, color1, color2) {
+Drawer.prototype.paintShip = function (position, angle, color1, color2, scale) {
+	scale = scale || 1.0;
 	var points1 = [
 		{x: 0, y:-10},
 		{x: -5, y:-5},
@@ -46,10 +47,10 @@ Drawer.prototype.paintShip = function (position, angle, color1, color2) {
 
     // Draw saucer bottom.
     this.context.beginPath();
-    point = this.getRotatedVectorPoint(points1[0], position, angle);
+    point = this.getRotatedVectorPoint(points1[0], position, angle, scale);
     this.context.moveTo(point.x, point.y);
 	for (i = 1; i<points1.length; i+=1) {
-    	point = this.getRotatedVectorPoint(points1[i], position, angle)
+    	point = this.getRotatedVectorPoint(points1[i], position, angle, scale)
 		this.context.lineTo(point.x, point.y);
 	}
     this.context.closePath();
@@ -58,8 +59,8 @@ Drawer.prototype.paintShip = function (position, angle, color1, color2) {
 
 
     this.context.beginPath();
-    point = this.getRotatedVectorPoint({x: 0, y: -3}, position, angle);
-	this.context.arc(point.x, point.y, 2, 0, 2 * Math.PI, false);
+    point = this.getRotatedVectorPoint({x: 0, y: -3}, position, angle, scale);
+	this.context.arc(point.x, point.y, 2*scale, 0, 2 * Math.PI, false);
 	this.context.fillStyle = color2
 	this.context.fill();
 }
@@ -93,7 +94,14 @@ Drawer.prototype.repaint = function () {
 	this.context.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
 	this.context.fill();
 
-	this.paintShip({x: 100, y: 100}, model.time/100, "#7777FF", "#2222FF");
+	position = this.translatePosition({x: robot.x, y: robot.y});
+	this.paintShip(position, robot.angle, "#7777FF", "#2222FF");
+
+	for (var i; i<particles.length; i+=1) {
+		position = this.translatePosition({x: particles[i].x, y: particles[i].y});
+		this.paintShip(position, particles[i].angle, "#660000", "#990000", 0.4);
+	};
+
 };
 
 Drawer.prototype.zoom = function (delta) {
