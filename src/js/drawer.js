@@ -8,7 +8,7 @@ function Drawer (canvas) {
 		range: 3500000000.0, // half of shortest dimension (width/height)
 	};
 
-	this.planetScale = 1000;
+	this.planetScale = 500;
 
 }
 
@@ -25,11 +25,48 @@ Drawer.prototype.translatePosition = function (position) {
 	}
 };
 
+Drawer.prototype.getRotatedVectorPoint = function (point, center, angle) {
+	// temp
+	return {x: center.x + point.x, y: center.y + point.y}
+};
+
+Drawer.prototype.paintShip = function (position, angle, color1, color2) {
+	var p1, p2, p3;
+    // Draw saucer bottom.
+    this.context.beginPath();
+    // top
+    p1 = this.getRotatedVectorPoint({x: 0, y: -20}, position, angle)
+    this.context.moveTo(p1.x, p1.y);
+    // top left angle
+    p1 = this.getRotatedVectorPoint({x: -20, y: -15}, position, angle)
+    p2 = this.getRotatedVectorPoint({x: -20, y: 0}, position, angle)
+    p3 = this.getRotatedVectorPoint({x: -10, y: 0}, position, angle)
+    this.context.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+    //bottom left angle
+    p1 = this.getRotatedVectorPoint({x: -20, y: -15}, position, angle)
+    p2 = this.getRotatedVectorPoint({x: -20, y: 0}, position, angle)
+    p3 = this.getRotatedVectorPoint({x: -10, y: 0}, position, angle)
+    this.context.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+    this.context.closePath();
+    this.context.fillStyle = "rgb(222, 103, 0)";
+    this.context.fill();
+
+    // Draw saucer top.
+    this.context.beginPath();
+    this.context.moveTo(22.3, 12.0);
+    this.context.bezierCurveTo(22.3, 13.3, 19.4, 14.3, 15.9, 14.3);
+    this.context.bezierCurveTo(12.4, 14.3, 9.6, 13.3, 9.6, 12.0);
+    this.context.bezierCurveTo(9.6, 10.8, 12.4, 9.7, 15.9, 9.7);
+    this.context.bezierCurveTo(19.4, 9.7, 22.3, 10.8, 22.3, 12.0);
+    this.context.closePath();
+    this.context.fillStyle = "rgb(51, 190, 0)";
+    this.context.fill();
+}
+
 Drawer.prototype.repaint = function () {
 	var position;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
-	this.context.fillStyle = "#FF0000";
 
 	for(var name in planets)
 	{
@@ -37,6 +74,7 @@ Drawer.prototype.repaint = function () {
 		{
 			position = model.getPlanetPosition(planets[name]);
 			position = this.translatePosition(position);
+			this.context.fillStyle = planets[name].color;
 			var radius = Math.max(2, this.translateDistance(planets[name].radius));
 			//temp
 			this.context.beginPath();
@@ -53,10 +91,12 @@ Drawer.prototype.repaint = function () {
 	this.context.beginPath();
 	this.context.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
 	this.context.fill();
+
+	this.paintShip({x: 100, y: 100}, 0, "rgb(222, 103, 0)", "rgb(51, 190, 0)");
 };
 
 Drawer.prototype.zoom = function (delta) {
-	this.view.range *= delta == 1 ? 1.1 : 0.9;
+	this.view.range *= delta == 1 ? 0.9 : 1.1;
 };
 
 Drawer.prototype.translateSpace = function (position) {
