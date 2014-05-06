@@ -1,45 +1,38 @@
-var MAP_BOUNDARIES = 3500000000,
-    MOVE_DIFF = 5,
+var MAP_BOUNDARIES = 3500000000, // 3 500 000 000
+    MOVE_DIFF = 20000000,
     TURN_DIFF = 0.05,
     MOVE_NOISE = 0.05,
     TURN_NOISE = 0.01,
-    SENSE_NOISE = 0.05;
+    SENSE_NOISE = 100000000; //  100 000 000
 
 function Robot(x, y, angle){
     this.x = x;
     this.y = y;
     this.angle = angle;
-    document.addEventListener("clockTick", this.move);
-}
-
-Robot.prototype.destroy = function(){
-    document.removeEventListener("clockTick", this.move);
 }
 
 Robot.prototype.move = function(e){
-    var keys = e.detail.keys, dist;
-    console.log("move", keys);
+    var keys = e.detail.keys, dist, turn;
 
     // turn
     if(keys.left || keys.right){
-        this.angle = (this.angle + TURN_DIFF * (keys.right ? 1 : -1) + randomNormal(0, TURN_NOISE)) % 1;
+        turn = (this.angle + TURN_DIFF * (keys.right ? 1 : -1) + randomNormal(0, TURN_NOISE)) % 1;
+        this.angle = turn;
     }
-
-    else if(keys.up || keys.down){
+    // move
+    if(keys.up || keys.down){
         dist = MOVE_DIFF + randomNormal(0, MOVE_NOISE);
-        this.x = this.x + Math.cos(this.angle * 2 * Math.PI) * dist;
-        this.y = this.y + Math.sin(this.angle * 2 * Math.PI) * dist;
+        this.y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
+        this.x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
     }
 }
 
 Robot.prototype.sense = function(){
     var distances = [], dist, planet_position;
-    for(var name in planets)
-    {
-        if (planets.hasOwnProperty(name))
-        {
+    for(var name in planets){
+        if (planets.hasOwnProperty(name)){
             planet_position = model.getPlanetPosition(planets[name]);
-            dist = Math.sqrt(Math.pow(this.x - planets_position.x, 2) + Math.pow(this.y - planets_positions.y, 2))
+            dist = Math.sqrt(Math.pow(this.x - planet_position.x, 2) + Math.pow(this.y - planet_position.y, 2))
             dist += randomNormal(0, SENSE_NOISE);
             distances.push(dist);
         }
@@ -57,9 +50,17 @@ function randomNormal(mean, std) {
   return (val * std) + mean;
 }
 
+function gaussian(mu, sigma, x){
+    return Math.exp(-(Math.pow(mu - x, 2)) / (Math.pow(sigma, 2)) / 2.0) / Math.sqrt(2.0 * Math.PI * Math.pow(sigma, 2));
+}
+
 
 var robot = new Robot(
     randomIntFromInterval(-MAP_BOUNDARIES, MAP_BOUNDARIES),
     randomIntFromInterval(-MAP_BOUNDARIES, MAP_BOUNDARIES),
     Math.random()
 );
+
+document.addEventListener("clockTick", function(e){
+    robot.move.call(robot, e);
+});
