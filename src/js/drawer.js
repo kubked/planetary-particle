@@ -104,7 +104,7 @@ Drawer.prototype.repaint = function () {
 	position = this.translatePosition({x: robot.x, y: robot.y});
 	this.paintShip(position, robot.angle, "#7777FF", "#2222FF");
 
-	for (var i; i<particles.length; i+=1) {
+	for (var i=0; i<particles.length; i+=1) {
 		position = this.translatePosition({x: particles[i].x, y: particles[i].y});
 		this.paintShip(position, particles[i].angle, "#660000", "#990000", 0.4);
 	};
