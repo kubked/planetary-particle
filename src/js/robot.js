@@ -3,8 +3,8 @@ var STANDBY_TURN = true,
     MAP_BOUNDARIES = 250000000, // 3 500 000 000
     MOVE_DIFF = 2000000,
     TURN_DIFF = 0.1,
-    MOVE_NOISE = 20000,
-    TURN_NOISE = 0.02,
+    MOVE_NOISE = 0.05 * MOVE_DIFF,
+    TURN_NOISE = 0.1 * TURN_DIFF,
     STAND_TURN_NOISE = 0.005;
     SENSE_NOISE = 10000000; //  100 000 000
 
@@ -24,7 +24,7 @@ Robot.prototype.move = function(e){
     if(keys.left || keys.right){
         turn = (this.angle + TURN_DIFF * (keys.right ? 1 : -1) + randomNormal(0, TURN_NOISE)) % 1;
         this.angle = turn;
-    } 
+    }
     else if(this.standby_actions && STANDBY_TURN){
         turn = (this.angle + randomNormal(0, STAND_TURN_NOISE)) % 1;
         this.angle = turn;
