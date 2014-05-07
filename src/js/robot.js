@@ -1,9 +1,9 @@
-var MAP_BOUNDARIES = 3500000000, // 3 500 000 000
-    MOVE_DIFF = 20000000,
+var MAP_BOUNDARIES = 35000000, // 3 500 000 000
+    MOVE_DIFF = 2000000,
     TURN_DIFF = 0.05,
     MOVE_NOISE = 0.05,
     TURN_NOISE = 0.01,
-    SENSE_NOISE = 100000000; //  100 000 000
+    SENSE_NOISE = 1000000; //  100 000 000
 
 function Robot(x, y, angle){
     this.x = x;
