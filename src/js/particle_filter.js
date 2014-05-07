@@ -36,5 +36,9 @@ document.addEventListener("clockTick", function(e){
             Math.random()
         ));
     }
+    
+    for(var i=0; i<PARTICLES_COUNT; ++i){
+        new_particles[i].move(e);
+    }
     particles = new_particles;
 });
