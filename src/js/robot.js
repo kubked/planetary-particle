@@ -18,7 +18,7 @@ function Robot(x, y, angle, standby_actions){
 }
 
 Robot.prototype.move = function(e){
-    var keys = e.detail.keys, dist, turn;
+    var keys = e.detail.keys, dist, turn, new_x=this.x, new_y=this.y;
 
     // turn
     if(keys.left || keys.right){
@@ -33,14 +33,19 @@ Robot.prototype.move = function(e){
     // move
     if(keys.up || keys.down){
         dist = (keys.down ? -1 : 1) * (MOVE_DIFF + randomNormal(0, MOVE_NOISE));
-        this.y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
-        this.x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
+        new_y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
+        new_x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
     }
     else if(this.standby_actions && STANDBY_MOVE){
         dist_x = randomNormal(0, MOVE_NOISE);
         dist_y = randomNormal(0, MOVE_NOISE);
-        this.x += dist_x;
-        this.y += dist_y;
+        new_x = this.x + dist_x;
+        new_y = this.y + dist_y;
+    }
+
+    if(model.isPossiblePosition({x: new_x, y: new_y})){
+        this.x = new_x;
+        this.y = new_y;
     }
 }
 
