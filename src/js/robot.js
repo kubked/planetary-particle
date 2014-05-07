@@ -1,6 +1,8 @@
 var STANDBY_TURN = true,
     STANDBY_MOVE = true,
-    ROBOT_MASS = 100000000000000,
+    ROBOT_MASS = 10000000000000,
+    ENGINE_ACCELERATION = 100000,
+    TICK_TIME = 1,
     MAP_BOUNDARIES = 250000000, // 3 500 000 000
     MOVE_DIFF = 2000000,
     TURN_DIFF = 0.1,
@@ -13,41 +15,56 @@ function Robot(x, y, angle, standby_actions){
     this.x = x;
     this.y = y;
     this.angle = angle;
-    this.engine_speed = 0;
+    this.speed = {x: 0, y: 0};
     this.standby_actions = standby_actions || false;
 }
 
 Robot.prototype.move = function(e){
-    var keys = e.detail.keys, dist, turn, new_x=this.x, new_y=this.y, dist_x=0, dist_y=0;
+    var keys = e.detail.keys, dist, turn = 0, new_x=this.x, new_y=this.y, dist_x=0, dist_y=0;
 
     // turn
     if(keys.left || keys.right){
-        turn = (this.angle + TURN_DIFF * (keys.right ? 1 : -1) + randomNormal(0, TURN_NOISE)) % 1;
-        this.angle = turn;
+        turn = TURN_DIFF * (keys.right ? 1 : -1) + randomNormal(0, TURN_NOISE);
+        // this.angle = turn;
     }
     else if(this.standby_actions && STANDBY_TURN){
-        turn = (this.angle + randomNormal(0, STAND_TURN_NOISE)) % 1;
-        this.angle = turn;
+        turn = randomNormal(0, STAND_TURN_NOISE);
+        // this.angle = turn;
     }
 
-    // move
+    this.angle = (this.angle + turn) % 1;
+
+    // // move
     if(keys.up || keys.down){
         dist = (keys.down ? -1 : 1) * (MOVE_DIFF + randomNormal(0, MOVE_NOISE));
-        dist_y = -Math.cos(this.angle * 2 * Math.PI) * dist;
-        dist_x = Math.sin(this.angle * 2 * Math.PI) * dist;
+        // dist_y = -Math.cos(this.angle * 2 * Math.PI) * dist;
+        // dist_x = Math.sin(this.angle * 2 * Math.PI) * dist;
+        this.speed.x += Math.sin(this.angle * 2 * Math.PI) * (keys.down ? -1 : 1) * ENGINE_ACCELERATION * TICK_TIME;
+        this.speed.y += -Math.cos(this.angle * 2 * Math.PI) * (keys.down ? -1 : 1) * ENGINE_ACCELERATION * TICK_TIME;
     }
-    else if(this.standby_actions && STANDBY_MOVE){
-        dist_x = randomNormal(0, MOVE_NOISE);
-        dist_y = randomNormal(0, MOVE_NOISE);
-    }
+    // else if(this.standby_actions && STANDBY_MOVE){
+    //     dist_x = randomNormal(0, MOVE_NOISE);
+    //     dist_y = randomNormal(0, MOVE_NOISE);
+    // }
 
-    // gravity
+    // // gravity
     gravity = model.getGravityInfluence(this, ROBOT_MASS);
-    move_vector = vectorAdd({x: dist_x, y: dist_y}, gravity);
-    console.log("gravity: ", gravity, "; engine: ", {x: dist_x, y: dist_y}, "; total_move: ", move_vector);
+    // move_vector = vectorAdd({x: dist_x, y: dist_y}, gravity);
 
-    new_x = this.x + move_vector.x;
-    new_y = this.y + move_vector.y;
+    // new_x = this.x + move_vector.x;
+    // new_y = this.y + move_vector.y;
+
+    // apply gravity
+    this.speed.x += gravity.x * TICK_TIME; // v = v0 + a*dt
+    this.speed.y += gravity.y * TICK_TIME;
+
+    dist_x = this.speed.x * TICK_TIME;
+    dist_y = this.speed.y * TICK_TIME;
+
+    new_x = this.x + dist_x;
+    new_y = this.y + dist_y;
+
+    console.log("gravity: ", gravity, "; speed: ", this.speed, "dist: ", {x: dist_x, y: dist_y}, "; new position: ", {x: new_x, y: new_y});
 
     if(model.isPossiblePosition({x: new_x, y: new_y})){
         this.x = new_x;
