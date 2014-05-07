@@ -1,4 +1,4 @@
-var PARTICLES_COUNT = 100;
+var PARTICLES_COUNT = 1000;
 
 function Particle(x, y, angle){
     Robot.call(this, x, y, angle);
@@ -6,7 +6,7 @@ function Particle(x, y, angle){
 Particle.prototype = Object.create(Robot.prototype);
 
 Particle.prototype.measurement = function(robot_sensors){
-    var pr = 1.0, i = 0;
+    var pr = 1.0, i = 0, dist, planet_position;
     for(var name in planets){
         if (planets.hasOwnProperty(name))
         {

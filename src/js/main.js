@@ -1,7 +1,7 @@
 // timer
 (function () {
 	var clock = 0.0;
-	var step = 2000;
+	var step = 300;
 
 	var up = false, down = false, left = false, right = false;
 
