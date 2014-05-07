@@ -1,7 +1,7 @@
 var PARTICLES_COUNT = 1000;
 
 function Particle(x, y, angle){
-    Robot.call(this, x, y, angle);
+    Robot.call(this, x, y, angle, true);
 }
 Particle.prototype = Object.create(Robot.prototype);
 
