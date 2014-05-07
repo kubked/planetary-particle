@@ -1,17 +1,20 @@
-var MAP_BOUNDARIES = 250000000, // 3 500 000 000
+var STANDBY_TURN = true,
+    STANDBY_MOVE = true,
+    MAP_BOUNDARIES = 250000000, // 3 500 000 000
     MOVE_DIFF = 2000000,
-    TURN_DIFF = 0.05,
+    TURN_DIFF = 0.1,
     MOVE_NOISE = 20000,
-    TURN_NOISE = 0.01,
+    TURN_NOISE = 0.02,
     STAND_TURN_NOISE = 0.005;
     SENSE_NOISE = 10000000; //  100 000 000
 
-function Robot(x, y, angle){
+function Robot(x, y, angle, standby_actions){
     this.x = x;
     this.y = y;
     this.gravity_x = 0;
     this.gravity_y = 0;
     this.angle = angle;
+    this.standby_actions = standby_actions || false;
 }
 
 Robot.prototype.move = function(e){
@@ -21,20 +24,24 @@ Robot.prototype.move = function(e){
     if(keys.left || keys.right){
         turn = (this.angle + TURN_DIFF * (keys.right ? 1 : -1) + randomNormal(0, TURN_NOISE)) % 1;
         this.angle = turn;
-    } else {
-        this.angle = (this.angle + randomNormal(0, STAND_TURN_NOISE));
+    } 
+    else if(this.standby_actions && STANDBY_TURN){
+        turn = (this.angle + randomNormal(0, STAND_TURN_NOISE)) % 1;
+        this.angle = turn;
     }
+
     // move
     if(keys.up || keys.down){
-        dist = MOVE_DIFF + randomNormal(0, MOVE_NOISE);
-    } else {
-        dist = randomNormal(0, MOVE_NOISE);
-        if (dist < 0) {
-            dist = 0;
-        }
+        dist = (keys.down ? -1 : 1) * (MOVE_DIFF + randomNormal(0, MOVE_NOISE));
+        this.y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
+        this.x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
     }
-    this.y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
-    this.x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
+    else if(this.standby_actions && STANDBY_MOVE){
+        dist_x = randomNormal(0, MOVE_NOISE);
+        dist_y = randomNormal(0, MOVE_NOISE);
+        this.x += dist_x;
+        this.y += dist_y;
+    }
 }
 
 Robot.prototype.gravity = function(gravity_x, gravity_y){
