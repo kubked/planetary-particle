@@ -1,4 +1,4 @@
-var SELECTION_PARTICLES_COUNT = parseInt(0.95 * PARTICLES_COUNT, 10);
+var SELECTION_PARTICLES_COUNT = parseInt(0.99 * PARTICLES_COUNT, 10);
     RANDOM_PARTICLES = PARTICLES_COUNT - SELECTION_PARTICLES_COUNT;
 
 document.addEventListener("clockTick", function(e){
@@ -6,13 +6,20 @@ document.addEventListener("clockTick", function(e){
         weights = [],
         new_particles = [],
         new_indexes = [],
-        index;
+        index,
+        cpi = current_particles_index,
+        api = (current_particles_index + 1) % 2;
+
+    robot.move.call(robot, e);
+    for(var i=0; i<PARTICLES_COUNT; ++i){
+        particles[i].move.call(particles[i], e);
+    }
 
     for(var i=0;i<particles.length;i++){
         weights.push(particles[i].measurement(robot_sensors));
     }
 
-    // console.log(weights);
+     console.log(weights);
 
     // selection
     index = randomIntFromInterval(0, PARTICLES_COUNT - 1);
@@ -25,7 +32,11 @@ document.addEventListener("clockTick", function(e){
             index = (index + 1) % PARTICLES_COUNT;
         }
         new_indexes.push(index);
-        new_particles.push(particles[index]);
+        //new_particles.push(new Particle(particles[index].x, particles[index].y, particles[index].angle));
+       p = particles_table[api][i];
+       p.x = particles[index].x;
+       p.y = particles[index].y;
+       p.angle = particles[index].angle;
     }
     // random
     for(var i=0;i<RANDOM_PARTICLES;i++){
@@ -37,8 +48,7 @@ document.addEventListener("clockTick", function(e){
         ));
     }
     
-    for(var i=0; i<PARTICLES_COUNT; ++i){
-        new_particles[i].move(e);
-    }
-    particles = new_particles;
+    // particles = new_particles;
+    current_particles_index = api;
+    particles = particles_table[current_particles_index];
 });

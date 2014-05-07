@@ -1,4 +1,4 @@
-var PARTICLES_COUNT = 500;
+var PARTICLES_COUNT = 100;
 
 function Particle(x, y, angle){
     Robot.call(this, x, y, angle);
@@ -19,14 +19,20 @@ Particle.prototype.measurement = function(robot_sensors){
     return pr;
 }
 
-var particles = [];
+var particles1 = [],
+    particles2 = [],
+    particles_table = [particles1, particles2],
+    current_particles_index = 0,
+    particles = particles_table[current_particles_index];
 
-for(var i = 0; i < PARTICLES_COUNT; i++){
-    particles.push(
-        new Particle(
-            randomIntFromInterval(-MAP_BOUNDARIES, MAP_BOUNDARIES),
-            randomIntFromInterval(-MAP_BOUNDARIES, MAP_BOUNDARIES),
-            Math.random()
-        )
-    );
+for(var k=0; k<=1;k++){
+    for(var i = 0; i < PARTICLES_COUNT; i++){
+        particles_table[k].push(
+            new Particle(
+                randomIntFromInterval(-MAP_BOUNDARIES, MAP_BOUNDARIES),
+                randomIntFromInterval(-MAP_BOUNDARIES, MAP_BOUNDARIES),
+                Math.random()
+            )
+        );
+    }
 }

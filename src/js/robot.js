@@ -1,13 +1,15 @@
-var MAP_BOUNDARIES = 35000000, // 3 500 000 000
+var MAP_BOUNDARIES = 250000000, // 3 500 000 000
     MOVE_DIFF = 2000000,
     TURN_DIFF = 0.05,
     MOVE_NOISE = 0.05,
     TURN_NOISE = 0.01,
-    SENSE_NOISE = 1000000; //  100 000 000
+    SENSE_NOISE = 10000000; //  100 000 000
 
 function Robot(x, y, angle){
     this.x = x;
     this.y = y;
+    this.gravity_x = 0;
+    this.gravity_y = 0;
     this.angle = angle;
 }
 
@@ -25,6 +27,11 @@ Robot.prototype.move = function(e){
         this.y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
         this.x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
     }
+}
+
+Robot.prototype.gravity = function(gravity_x, gravity_y){
+    this.gravity_x = x;
+    this.gravity_y = y;
 }
 
 Robot.prototype.sense = function(){
@@ -62,5 +69,5 @@ var robot = new Robot(
 );
 
 document.addEventListener("clockTick", function(e){
-    robot.move.call(robot, e);
+    //robot.move.call(robot, e);
 });
