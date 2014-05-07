@@ -1,7 +1,7 @@
 // timer
 (function () {
 	var clock = Math.random() * 1000;
-	var step = 40;
+	var step = 400;
 
 	var up = false, down = false, left = false, right = false;
 
