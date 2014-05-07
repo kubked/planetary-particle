@@ -1,5 +1,6 @@
 var STANDBY_TURN = true,
     STANDBY_MOVE = true,
+    ROBOT_MASS = 100000000000000,
     MAP_BOUNDARIES = 250000000, // 3 500 000 000
     MOVE_DIFF = 2000000,
     TURN_DIFF = 0.1,
@@ -11,14 +12,13 @@ var STANDBY_TURN = true,
 function Robot(x, y, angle, standby_actions){
     this.x = x;
     this.y = y;
-    this.gravity_x = 0;
-    this.gravity_y = 0;
     this.angle = angle;
+    this.engine_speed = 0;
     this.standby_actions = standby_actions || false;
 }
 
 Robot.prototype.move = function(e){
-    var keys = e.detail.keys, dist, turn, new_x=this.x, new_y=this.y;
+    var keys = e.detail.keys, dist, turn, new_x=this.x, new_y=this.y, dist_x=0, dist_y=0;
 
     // turn
     if(keys.left || keys.right){
@@ -33,25 +33,26 @@ Robot.prototype.move = function(e){
     // move
     if(keys.up || keys.down){
         dist = (keys.down ? -1 : 1) * (MOVE_DIFF + randomNormal(0, MOVE_NOISE));
-        new_y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
-        new_x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
+        dist_y = -Math.cos(this.angle * 2 * Math.PI) * dist;
+        dist_x = Math.sin(this.angle * 2 * Math.PI) * dist;
     }
     else if(this.standby_actions && STANDBY_MOVE){
         dist_x = randomNormal(0, MOVE_NOISE);
         dist_y = randomNormal(0, MOVE_NOISE);
-        new_x = this.x + dist_x;
-        new_y = this.y + dist_y;
     }
+
+    // gravity
+    gravity = model.getGravityInfluence(this, ROBOT_MASS);
+    move_vector = vectorAdd({x: dist_x, y: dist_y}, gravity);
+    console.log("gravity: ", gravity, "; engine: ", {x: dist_x, y: dist_y}, "; total_move: ", move_vector);
+
+    new_x = this.x + move_vector.x;
+    new_y = this.y + move_vector.y;
 
     if(model.isPossiblePosition({x: new_x, y: new_y})){
         this.x = new_x;
         this.y = new_y;
     }
-}
-
-Robot.prototype.gravity = function(gravity_x, gravity_y){
-    this.gravity_x = x;
-    this.gravity_y = y;
 }
 
 Robot.prototype.sense = function(){
