@@ -2,9 +2,9 @@ var STANDBY_TURN = true,
     STANDBY_MOVE = true,
     MAP_BOUNDARIES = 250000000, // 3 500 000 000
     MOVE_DIFF = 2000000,
-    TURN_DIFF = 0.1,
-    MOVE_NOISE = 0.05,
-    TURN_NOISE = 0.02,
+    TURN_DIFF = 0.05,
+    MOVE_NOISE = 100000,
+    TURN_NOISE = 0.01,
     SENSE_NOISE = 10000000; //  100 000 000
 
 function Robot(x, y, angle, standby_actions){
