@@ -1,4 +1,4 @@
-var PARTICLES_COUNT = 1000;
+var PARTICLES_COUNT = 500;
 
 function Particle(x, y, angle){
     Robot.call(this, x, y, angle);

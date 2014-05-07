@@ -1,8 +1,9 @@
 var MAP_BOUNDARIES = 250000000, // 3 500 000 000
     MOVE_DIFF = 2000000,
     TURN_DIFF = 0.05,
-    MOVE_NOISE = 0.05,
+    MOVE_NOISE = 20000,
     TURN_NOISE = 0.01,
+    STAND_TURN_NOISE = 0.005;
     SENSE_NOISE = 10000000; //  100 000 000
 
 function Robot(x, y, angle){
@@ -20,13 +21,20 @@ Robot.prototype.move = function(e){
     if(keys.left || keys.right){
         turn = (this.angle + TURN_DIFF * (keys.right ? 1 : -1) + randomNormal(0, TURN_NOISE)) % 1;
         this.angle = turn;
+    } else {
+        this.angle = (this.angle + randomNormal(0, STAND_TURN_NOISE));
     }
     // move
     if(keys.up || keys.down){
         dist = MOVE_DIFF + randomNormal(0, MOVE_NOISE);
-        this.y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
-        this.x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
+    } else {
+        dist = randomNormal(0, MOVE_NOISE);
+        if (dist < 0) {
+            dist = 0;
+        }
     }
+    this.y = this.y - Math.cos(this.angle * 2 * Math.PI) * dist;
+    this.x = this.x + Math.sin(this.angle * 2 * Math.PI) * dist;
 }
 
 Robot.prototype.gravity = function(gravity_x, gravity_y){
