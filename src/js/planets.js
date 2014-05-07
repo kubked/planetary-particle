@@ -3,7 +3,7 @@ var planets = {
 		radius: 34800000.0, // not real radius
 		starDistance: 0,
 		period: 1,
-		mass: 333980000.0,
+		mass: 33398.0, // not real mass
 		color: "#FFFF00"
 	},
 	mercury: {
