@@ -1,30 +1,30 @@
 var planets = {
 	sun: {
-		radius: 34800.0, // not real radius
+		radius: 34800000.0, // not real radius
 		starDistance: 0,
 		period: 1,
 		color: "#FFFF00"
 	},
 	mercury: {
-		radius: 2439.7,
+		radius: 2439700.0,
 		starDistance: 57909176.0,
 		period: 0.2408467,
 		color: "#A4ACBF"
 	},
 	venus: {
-		radius: 6051.8,
+		radius: 6051800.0,
 		starDistance: 108208930.0,
 		period: 0.61519726,
 		color: "#EBCE8A"
 	},
 	earth: {
-		radius: 6371.0,
+		radius: 6371000.0,
 		starDistance: 149597890.0,
 		period: 1.0000174,
 		color: "#4CAFED"
 	},
 	mars: {
-		radius: 3389.5,
+		radius: 3389500.0,
 		starDistance: 227936640.0,
 		period: 1.8808476,
 		color: "#A16D4D"

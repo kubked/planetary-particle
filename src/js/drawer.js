@@ -7,14 +7,10 @@ function Drawer (canvas) {
 		y: 0, // center position
 		range: 250000000.0, // half of shortest dimension (width/height)
 	};
-
-	this.planetScale = 1000;
-
 }
 
-Drawer.prototype.translateDistance = function (distance, scale) {
-	scale = scale || this.planetScale;
-	return Math.min(this.canvas.width, this.canvas.height) / (2 * this.view.range) * distance * scale;
+Drawer.prototype.translateDistance = function (distance) {
+	return Math.min(this.canvas.width, this.canvas.height) / (2 * this.view.range) * distance;
 };
 
 Drawer.prototype.translatePosition = function (position) {
