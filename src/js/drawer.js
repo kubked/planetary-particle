@@ -5,7 +5,7 @@ function Drawer (canvas) {
 	this.view = {
 		x: 0, // center position
 		y: 0, // center position
-		range: 4500000000.0, // half of shortest dimension (width/height)
+		range: 35000000.0, // half of shortest dimension (width/height)
 	};
 
 	this.planetScale = 500;
