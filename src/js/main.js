@@ -1,6 +1,6 @@
 // timer
 (function () {
-	var clock = 0.0;
+	var clock = Math.random() * 1000;
 	var step = 40;
 
 	var up = false, down = false, left = false, right = false;

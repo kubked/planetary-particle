@@ -85,21 +85,11 @@ Drawer.prototype.repaint = function () {
 			position = this.translatePosition(position);
 			this.context.fillStyle = planets[name].color;
 			var radius = Math.max(2, this.translateDistance(planets[name].radius));
-			//temp
 			this.context.beginPath();
 			this.context.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
 			this.context.fill();
 		}
 	}
-
-	// Draw star in center:
-	this.context.fillStyle = "#FFFF00";
-	position = this.translatePosition({x:0, y:0});
-	var radius = Math.max(4, this.translateDistance(6960.0 * 5))
-	//temp
-	this.context.beginPath();
-	this.context.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
-	this.context.fill();
 
 	position = this.translatePosition({x: robot.x, y: robot.y});
 	this.paintShip(position, robot.angle, "#7777FF", "#2222FF");

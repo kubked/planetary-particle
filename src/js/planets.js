@@ -1,4 +1,10 @@
 var planets = {
+	sun: {
+		radius: 34800.0, // not real radius
+		starDistance: 0,
+		period: 1,
+		color: "#FFFF00"
+	},
 	mercury: {
 		radius: 2439.7,
 		starDistance: 57909176.0,
