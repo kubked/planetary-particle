@@ -52,13 +52,19 @@ Robot.prototype.move = function(e){
 }
 
 Robot.prototype.sense = function(){
-    var distances = [], dist, planet_position;
-    for(var planet in model.getPlanetsInRadarRange({x: this.x, y: this.y}, this.angle, RADAR_RANGE, RADAR_ANGLE)){
+    var distances = [], dist, planet_position,
+        planetsInRange = model.getPlanetsInRadarRange(this, this.angle, RADAR_RANGE, RADAR_ANGLE);
+    var planetsName = [], planet;
+    for(var i=0;i<planetsInRange.length;i++){
+        planet = planetsInRange[i];
+        planetsName.push(planet.name);
         planet_position = model.getPlanetPosition(planet);
         dist = Math.sqrt(Math.pow(this.x - planet_position.x, 2) + Math.pow(this.y - planet_position.y, 2))
         dist += randomNormal(0, SENSE_NOISE);
         distances.push(dist);
     }
+
+    console.log("robot planes in range: ", planetsName);
     return distances.sort();
 }
 
