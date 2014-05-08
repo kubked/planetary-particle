@@ -25,7 +25,7 @@ document.addEventListener("clockTick", function(e){
         for(var i=0;i<particles.length;i++){
             weights.push(particles[i].measurement(robot_sensors));
         }
-
+        // console.log("robot planets detected: ", robot_sensors.length);
         // console.log(weights);
 
         // selection
