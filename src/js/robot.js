@@ -7,8 +7,8 @@ var STANDBY_TURN = true,
     TURN_NOISE = 0.1 * TURN_DIFF,
     STAND_TURN_NOISE = 0.005,
     SENSE_NOISE = 10000000, //  100 000 000
-    RADAR_ANGLE = 0.1,
-    RADAR_RANGE = 100000000; // 80 000 000
+    RADAR_ANGLE = 0.2,
+    RADAR_RANGE = 200000000; // 80 000 000
 
 function Robot(x, y, angle, standby_actions){
     this.x = x;
@@ -30,6 +30,9 @@ Robot.prototype.move = function(e){
     else if(this.standby_actions && STANDBY_TURN){
         turn = (this.angle + randomNormal(0, STAND_TURN_NOISE)) % 1;
         this.angle = turn;
+    }
+    if(this.angle < 0){
+        this.angle += 1;
     }
 
     // move
@@ -64,7 +67,7 @@ Robot.prototype.sense = function(){
         distances.push(dist);
     }
 
-    //console.log("robot planes in range: ", planetsName);
+    // console.log("robot planes in range: ", planetsName);
     return distances.sort();
 }
 
