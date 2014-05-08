@@ -50,13 +50,13 @@ Model.prototype.getPlanetsInRadarRange = function(position, angle, radarRange, r
 		{
 			planetPosition = this.getPlanetPosition(planets[name]);
 			dist = distance(planetPosition, position);
-			planetAngle = this.angle(planetPosition, position);
-			angleLeft = angle - radarRange;
+			planetAngle = this.angle(position, planetPosition);
+			angleLeft = angle - radarAngle;
 			if(angleLeft < 0){
 				angleLeft += 1;
 			}
-			angleRight = angle + radarRange;
-			if (dist < radarRange && planetAngle > angleLeft & planetAngle < angleRight) {
+			angleRight = angle + radarAngle;
+			if (dist < radarRange && planetAngle > angleLeft && planetAngle < angleRight) {
 				planetsInRange.push(planets[name]);
 			}
 		}

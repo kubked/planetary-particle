@@ -64,7 +64,7 @@ Robot.prototype.sense = function(){
         distances.push(dist);
     }
 
-    console.log("robot planes in range: ", planetsName);
+    //console.log("robot planes in range: ", planetsName);
     return distances.sort();
 }
 

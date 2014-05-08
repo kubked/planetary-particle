@@ -1,4 +1,4 @@
-var PARTICLES_COUNT = 500,
+var PARTICLES_COUNT = 100,
     UNDEFINED_DIST = 1000000000;
 
 function Particle(x, y, angle){
