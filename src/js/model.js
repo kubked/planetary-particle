@@ -1,3 +1,5 @@
+var EPSILON = 0.00001;
+
 function Model () {
 	this.time = 0.0; // in days
 	var obj = this;
@@ -55,10 +57,22 @@ Model.prototype.getPlanetsInRadarRange = function(position, angle, radarRange, r
 			if(angleLeft < 0){
 				angleLeft += 1;
 			}
-			angleRight = angle + radarAngle/2;
-			if (dist < radarRange && planetAngle > angleLeft && planetAngle < angleRight) {
-				planetsInRange.push(planets[name]);
+			angleLeft = angleLeft % 1;
+			angleRight = (angle + radarAngle/2) % 1;
+			if (dist <= radarRange){
+				// 0 inside
+				if(angleLeft > angleRight - EPSILON){
+					if(planetAngle <= angleRight || planetAngle >= angleLeft){
+						planetsInRange.push(planets[name]);
+					}
+				}
+				else{
+					if(planetAngle > angleLeft && planetAngle < angleRight) {
+						planetsInRange.push(planets[name]);
+					}
+				}
 			}
+
 		}
 	}
 	return planetsInRange;

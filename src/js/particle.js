@@ -1,6 +1,6 @@
 var PARTICLES_COUNT = 1000,
     UNDEFINED_DIST = 1000000000
-    PLANET_DIFF_FACTOR = 0.1;
+    PLANET_DIFF_FACTOR = 0.000000001;
 
 function Particle(x, y, angle){
     Robot.call(this, x, y, angle, true);
