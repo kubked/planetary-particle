@@ -28,6 +28,18 @@ Drawer.prototype.getRotatedVectorPoint = function (point, center, angle, scale) 
 	return {x: center.x + point.x*scale, y: center.y + point.y*scale}
 };
 
+Drawer.prototype.paintRadar = function (position, angle) {
+	var point = this.translatePosition(position);
+	angle -= 0.25;
+	this.context.moveTo(point.x, point.y);
+	this.context.beginPath();
+	this.context.arc(point.x, point.y, this.translateDistance(RADAR_RANGE), (angle - (RADAR_ANGLE/2))*Math.PI*2, (angle + (RADAR_ANGLE/2))*Math.PI*2);
+	this.context.lineTo(point.x, point.y);
+	this.context.closePath();
+	this.context.fillStyle = "#002200";
+	this.context.fill()
+}
+
 Drawer.prototype.paintShip = function (position, angle, color1, color2, scale) {
 	scale = scale || 1.0;
 	var points1 = [
@@ -65,6 +77,8 @@ Drawer.prototype.repaint = function () {
 	var position;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
+
+    this.paintRadar({x: robot.x, y: robot.y}, robot.angle);
 
 	for(var name in planets)
 	{
