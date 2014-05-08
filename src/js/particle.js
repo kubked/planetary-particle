@@ -1,5 +1,6 @@
-var PARTICLES_COUNT = 100,
-    UNDEFINED_DIST = 1000000000;
+var PARTICLES_COUNT = 1000,
+    UNDEFINED_DIST = 1000000000
+    PLANET_DIFF_FACTOR = 0.1;
 
 function Particle(x, y, angle){
     Robot.call(this, x, y, angle, true);
@@ -17,9 +18,10 @@ Particle.prototype.measurement = function(robot_sensors){
         particlesDists.push(dist);
     }
     particlesDists = particlesDists.sort();
-    for(var j=0;j<particlesDists.length;j++){
-        pr *= gaussian(robot_sensors[j] || UNDEFINED_DIST, SENSE_NOISE, particlesDists[j]);
+    for(var j=0;j<Math.min(particlesDists.length, robot_sensors.length);j++){
+        pr *= gaussian(robot_sensors[j], SENSE_NOISE, particlesDists[j]);
     }
+    pr *= Math.pow(PLANET_DIFF_FACTOR, Math.abs(particlesDists.length - robot_sensors.length));
     return pr;
 }
 
