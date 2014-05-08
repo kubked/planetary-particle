@@ -8,7 +8,7 @@ var STANDBY_TURN = true,
     STAND_TURN_NOISE = 0.005,
     SENSE_NOISE = 10000000, //  100 000 000
     RADAR_ANGLE = 0.1,
-    RADAR_RANGE = 80000000; // 80 000 000
+    RADAR_RANGE = 100000000; // 80 000 000
 
 function Robot(x, y, angle, standby_actions){
     this.x = x;
