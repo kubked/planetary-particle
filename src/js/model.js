@@ -26,10 +26,42 @@ Model.prototype.isPossiblePosition = function (position) {
 		{
 			if (distance(this.getPlanetPosition(planets[name]), position) < planets[name].radius) {
 				return false;
-			} 
+			}
 		}
 	}
 	return true;
+}
+
+Model.prototype.angle = function(point1, point2){
+	var dx = point1.x - point2.x,
+		dy = point1.y - point2.y,
+		angle = Math.atan2(dy, dx);
+	if(angle < 0){
+		angle += 2 * Math.PI;
+	}
+	return (angle - Math.PI / 2) / (2 * Math.PI);
+}
+
+Model.prototype.getPlanetsInRadarRange = function(position, angle, radarRange, radarAngle){
+	var planetsInRange = [], dist, planetPosition, planetAngle;
+	for(var name in planets)
+	{
+		if (planets.hasOwnProperty(name))
+		{
+			planetPosition = this.getPlanetPosition(planets[name]);
+			dist = distance(planetPosition, position);
+			planetAngle = this.angle(planetPosition, position);
+			angleLeft = angle - radarRange;
+			if(angleLeft < 0){
+				angleLeft += 1;
+			}
+			angleRight = angle + radarRange;
+			if (dist < radarRange && planetAngle > angleLeft & planetAngle < angleRight) {
+				planetsInRange.push(planets[name]);
+			}
+		}
+	}
+	return planetsInRange;
 }
 
 function distance(point1, point2) {

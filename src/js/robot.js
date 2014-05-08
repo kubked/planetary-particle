@@ -1,12 +1,14 @@
 var STANDBY_TURN = true,
     STANDBY_MOVE = true,
-    MAP_BOUNDARIES = 250000000, // 3 500 000 000
-    MOVE_DIFF = 2000000,
-    TURN_DIFF = 0.1,
+    MAP_BOUNDARIES = 250000000, // 250 000 000
+    MOVE_DIFF = 2000000, // 2 000 000
+    TURN_DIFF = 0.02,
     MOVE_NOISE = 0.05 * MOVE_DIFF,
     TURN_NOISE = 0.1 * TURN_DIFF,
-    STAND_TURN_NOISE = 0.005;
-    SENSE_NOISE = 10000000; //  100 000 000
+    STAND_TURN_NOISE = 0.005,
+    SENSE_NOISE = 10000000, //  100 000 000
+    RADAR_ANGLE = 0.1,
+    RADAR_RANGE = 80000000; // 80 000 000
 
 function Robot(x, y, angle, standby_actions){
     this.x = x;
@@ -49,22 +51,15 @@ Robot.prototype.move = function(e){
     }
 }
 
-Robot.prototype.gravity = function(gravity_x, gravity_y){
-    this.gravity_x = x;
-    this.gravity_y = y;
-}
-
 Robot.prototype.sense = function(){
     var distances = [], dist, planet_position;
-    for(var name in planets){
-        if (planets.hasOwnProperty(name)){
-            planet_position = model.getPlanetPosition(planets[name]);
-            dist = Math.sqrt(Math.pow(this.x - planet_position.x, 2) + Math.pow(this.y - planet_position.y, 2))
-            dist += randomNormal(0, SENSE_NOISE);
-            distances.push(dist);
-        }
+    for(var planet in model.getPlanetsInRadarRange({x: this.x, y: this.y}, this.angle, RADAR_RANGE, RADAR_ANGLE)){
+        planet_position = model.getPlanetPosition(planet);
+        dist = Math.sqrt(Math.pow(this.x - planet_position.x, 2) + Math.pow(this.y - planet_position.y, 2))
+        dist += randomNormal(0, SENSE_NOISE);
+        distances.push(dist);
     }
-    return distances;
+    return distances.sort();
 }
 
 function randomIntFromInterval(min,max)
