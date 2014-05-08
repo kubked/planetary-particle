@@ -35,11 +35,8 @@ Model.prototype.isPossiblePosition = function (position) {
 Model.prototype.angle = function(point1, point2){
 	var dx = point1.x - point2.x,
 		dy = point1.y - point2.y,
-		angle = Math.atan2(dy, dx);
-	if(angle < 0){
-		angle += 2 * Math.PI;
-	}
-	return (angle - Math.PI / 2) / (2 * Math.PI);
+		angle = Math.atan2(dx, dy);
+	return angle / (2 * Math.PI);
 }
 
 Model.prototype.getPlanetsInRadarRange = function(position, angle, radarRange, radarAngle){
