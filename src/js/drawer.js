@@ -62,9 +62,11 @@ Drawer.prototype.paintShip = function (position, angle, color1, color2, scale) {
 }
 
 Drawer.prototype.repaint = function () {
-	var position;
+	var position, robot_pos;
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
+
+	robot_pos = this.translatePosition({x: robot.x, y: robot.y});
 
 	for(var name in planets)
 	{
@@ -76,19 +78,28 @@ Drawer.prototype.repaint = function () {
 			this.context.beginPath();
 			this.context.arc(position.x, position.y, this.translateDistance(planets[name].starDistance, 1.0), 0, 2 * Math.PI, false);
 			this.context.stroke();
+			this.context.closePath();
 
 			position = model.getPlanetPosition(planets[name]);
 			position = this.translatePosition(position);
+
+			this.context.beginPath();
+			this.context.strokeStyle = "#004400";
+			this.context.moveTo(position.x, position.y);
+			this.context.lineTo(robot_pos.x, robot_pos.y);
+			this.context.stroke();
+			this.context.closePath();
+
 			this.context.fillStyle = planets[name].color;
 			var radius = Math.max(2, this.translateDistance(planets[name].radius));
 			this.context.beginPath();
 			this.context.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
 			this.context.fill();
+			this.context.closePath();
 		}
 	}
 
-	position = this.translatePosition({x: robot.x, y: robot.y});
-	this.paintShip(position, robot.angle, "#7777FF", "#2222FF");
+	this.paintShip(robot_pos, robot.angle, "#7777FF", "#2222FF");
 
 	for (var i=0; i<particles.length; i+=1) {
 		position = this.translatePosition({x: particles[i].x, y: particles[i].y});
